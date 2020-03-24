@@ -1,0 +1,20 @@
+Package: covidCharacterizationTest
+Type: Package
+Title: A test of using Cohort Diagnostics for characterization of the COVID study-a-thon
+Version: 0.0.1
+Author: Anthony Sena [aut, cre]
+Maintainer: Anthony G. Sena <asena5@its.jnj.com>
+Description: Used to test out ideas for performing characterizations
+Depends:
+    DatabaseConnector (>= 2.2.0)
+Imports:
+	CohortDiagnostics
+Suggests:
+    knitr,
+    rmarkdown,
+    ROhdsiWebApi,
+    OhdsiRTools
+License: Apache License 2.0
+VignetteBuilder: knitr
+LazyData: TRUE
+RoxygenNote: 7.0.2

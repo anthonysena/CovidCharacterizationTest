@@ -1,0 +1,4 @@
+atlasId,atlasName,cohortId,name
+14896,Outpatient or ER with flu no inpatient on same or next day,1,Outpatient or ER with flu no inpatient on same or next day (T)
+14895,Outpatient or ER with flu no inpatient on same or next day no hospt for pneumonia,2,Outpatient or ER with flu no hosp (T wo O)
+14894,Outpatient or ER with flu no inpatient on same or next day with hospt for pneumonia,3,Outpatient or ER with flu with hosp (T w O)

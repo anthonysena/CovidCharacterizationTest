@@ -1,0 +1,6 @@
+"cohortName","ruleSequence","ruleName","cohortId"
+"Outpatient or ER with flu no hosp (T wo O)",0,"no inpatient admission on same day or next day",2
+"Outpatient or ER with flu no hosp (T wo O)",1,"has no hospitalization with pneumonia in 2d to 30d after flu index",2
+"Outpatient or ER with flu no inpatient on same or next day (T)",0,"no inpatient admission on same day or next day",1
+"Outpatient or ER with flu with hosp (T w O)",0,"no inpatient admission on same day or next day",3
+"Outpatient or ER with flu with hosp (T w O)",1,"has hospitalization with pneumonia in 2d to 30d after flu index",3
