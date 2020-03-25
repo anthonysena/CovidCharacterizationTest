@@ -55,7 +55,7 @@ runCohortDiagnostics(connectionDetails = connectionDetails,
                      databaseId = databaseId,
                      databaseName = databaseName,
                      databaseDescription = databaseDescription,
-                     createCohorts = TRUE,
+                     createCohorts = FALSE,
                      runInclusionStatistics = TRUE,
                      runIncludedSourceConcepts = FALSE,
                      runOrphanConcepts = FALSE,
@@ -66,13 +66,52 @@ runCohortDiagnostics(connectionDetails = connectionDetails,
                      runCohortCharacterization = FALSE,
                      minCellCount = 5)
 
+# Perform the characterization
+baselineCovariateSettings <- FeatureExtraction::createCovariateSettings(useDrugExposureShortTerm = TRUE,
+                                                                        shortTermStartDays = -30,
+                                                                        mediumTermStartDays = -90,
+                                                                        longTermStartDays = -365,
+                                                                        endDays = 0)
+postIndexCovariateSettings <- FeatureExtraction::createCovariateSettings(useDrugExposureShortTerm = TRUE,
+                                                                         shortTermStartDays = 61,
+                                                                         mediumTermStartDays = 31,
+                                                                         longTermStartDays = 1,
+                                                                         endDays = 90)
+
+
+runCohortCharacterization(packageName = "covidCharacterizationTest",
+                          connectionDetails = connectionDetails,
+                          cdmDatabaseSchema = cdmDatabaseSchema,
+                          cohortDatabaseSchema = cohortDatabaseSchema,
+                          cohortTable = cohortTable,
+                          oracleTempSchema = oracleTempSchema,
+                          outputFolder = outputFolder,
+                          databaseId = databaseId,
+                          databaseName = databaseName,
+                          databaseDescription = databaseDescription,
+                          baselineCovariateSettings = baselineCovariateSettings,
+                          postIndexCovariateSettings = postIndexCovariateSettings)
+
+# Add all to zip file -------------------------------------------------------------------------------
+ParallelLogger::logInfo("Adding results to zip file")
+exportFolder = file.path(outputFolder,"diagnosticsExport")
+zipName <- file.path(exportFolder, paste0("Results_", databaseId, ".zip"))
+files <- list.files(exportFolder, pattern = ".*\\.csv$")
+oldWd <- setwd(exportFolder)
+on.exit(setwd(oldWd), add = TRUE)
+DatabaseConnector::createZipFile(zipFile = zipName, files = files)
+ParallelLogger::logInfo("Results are ready for sharing at:", zipName)
+
+
 # To view the results: Optional: if there are results zip files from multiple sites in a folder, this
 # merges them, which will speed up starting the viewer:
-# CohortDiagnostics::preMergeDiagnosticsFiles(file.path(outputFolder, 'diagnosticsExport')) # Use
-# this to view the results. Multiple zip files can be in the same folder. If the files were
+CohortDiagnostics::preMergeDiagnosticsFiles(file.path(outputFolder, 'diagnosticsExport')) 
+
+# Use this to view the results. Multiple zip files can be in the same folder. If the files were
 # pre-merged, this is automatically detected:
-# CohortDiagnostics::launchDiagnosticsExplorer(file.path(outputFolder, 'diagnosticsExport')) # To
-# explore a specific cohort in the local database, viewing patient profiles:
+CohortDiagnostics::launchDiagnosticsExplorer(file.path(outputFolder, 'diagnosticsExport')) 
+
+# To explore a specific cohort in the local database, viewing patient profiles:
 # CohortDiagnostics::launchCohortExplorer(connectionDetails = connectionDetails, cdmDatabaseSchema =
 # cdmDatabaseSchema, cohortDatabaseSchema = cohortDatabaseSchema, cohortTable = cohortTable, cohortId
 # = 123) Where 123 is the ID of the cohort you wish to inspect.
